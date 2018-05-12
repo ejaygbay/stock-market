@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>FreeCodeCamp Stock Market Project</title>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!--/*<script src="http://code.highcharts.com/highcharts.js"></script>*/-->
+    <script src="Chart.min.js"></script>
+    <script src="Chart.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <h4 style="text-align: center">Stock Market Chart</h4>
+        </div>
+        <div class="row">
+            <div class="col l3 m3 s3"></div>
+            <div class="col l4 m4 s4">
+                <input type="text" id="newStock" placeholder="Enter New Stock">
+            </div>
+            <div class="col l2 m2 s2">
+                <button class="btn waves-effect waves-light" id="submit">Send</button>
+            </div>
+            <div class="col l3 m3 s3"></div>
+
+        </div>
+        <canvas id="myChart" width="400" height="150"></canvas>
+    </div>
+    <script>
+        $(document).ready(function() {
+            var all_labels = [];
+            var labels_data = [];
+            var dataSet_code;
+            var stock = "AAPL";
+            var myChart;
+            // var Chart;
+            callme();
+
+            $("#submit").click(function() {
+                var doc = document.getElementById("newStock").value;
+                var i;
+                // if (myChart) myChart.chart.destroy(); // distroy the old chart
+                myChart.destroy();
+                stock = doc;
+                all_labels = [];
+                labels_data = [];
+                callme();
+            })
+
+
+            function callme() {
+                var xhttp;
+                var your_data;
+                xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    if (xhttp.readyState == 4 && xhttp.status == 200) {
+                        your_data = JSON.parse(xhttp.responseText);
+                        dataSet_code = your_data.dataset.dataset_code;
+                        var dates = your_data.dataset.data;
+                        console.log(your_data.dataset);
+                        console.log("=================================");
+                        console.log(dataSet_code);
+                        console.log(your_data);
+                        var i;
+                        for (i = 0; i < dates.length; i++) {
+                            all_labels.push(dates[i][0]);
+                            labels_data.push(dates[i][1]);
+                        }
+                        console.log(all_labels);
+                        console.log(labels_data);
+                        stock_graph();
+                    }
+                }
+                xhttp.open("GET", "https://www.quandl.com/api/v3/datasets/EOD/" + stock + ".json?api_key=fz75gf9LBs2xWdhoYhVv&limit=10", true);
+                xhttp.send(xhttp.responseText);
+            }
+
+            function stock_graph() {
+                var ctx = document.getElementById("myChart").getContext('2d');
+                myChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: all_labels,
+                        datasets: [{
+                            label: dataSet_code,
+                            data: labels_data,
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderColor: [
+                                'rgba(255,99,132,1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            fill: false,
+                        }]
+                    },
+                    options: {
+                        tooltips: {
+                            mode: 'index',
+                            intersect: false,
+                        }
+                    }
+                });
+            };
+        })
+    </script>
+</body>
+
+</html>
