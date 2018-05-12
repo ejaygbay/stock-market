@@ -1,0 +1,25 @@
+{
+  "name": "stock-market-graph",
+  "version": "0.0.1",
+  "description": "Node app for show the chart of a stock company",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "dependencies": {
+    "express": "^4.16.3",
+    "nodemon": "^1.17.3"
+  },
+  "engines": {
+    "node": "8.x"
+  },
+  "repository": {
+    "url": "https://github.com/ejaygbay/stock-market"
+  },
+  "license": "",
+  "keywords": [
+    "node",
+    "glitch",
+    "express"
+  ]
+}
